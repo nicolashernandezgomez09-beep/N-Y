@@ -1,0 +1,793 @@
+# <!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Retos Matemáticos PRO+</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:Arial,sans-serif;
+background:linear-gradient(135deg,#07111a,#0f2027,#203a43);
+color:white;
+overflow-x:hidden;
+}
+
+/* POPUP */
+
+#popup{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.9);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:9999;
+}
+
+.popup-box{
+background:#10232e;
+padding:40px;
+border-radius:25px;
+text-align:center;
+width:90%;
+max-width:500px;
+
+box-shadow:
+0 0 20px #00e5ff,
+0 0 40px #00e5ff;
+}
+
+.popup-box h1{
+font-size:42px;
+margin-bottom:20px;
+color:#00e5ff;
+}
+
+.popup-box p{
+font-size:24px;
+margin-bottom:30px;
+}
+
+button{
+padding:14px 28px;
+border:none;
+border-radius:15px;
+font-size:20px;
+font-weight:bold;
+cursor:pointer;
+background:#00e5ff;
+color:black;
+
+box-shadow:
+0 0 10px #00e5ff,
+0 0 20px #00e5ff;
+}
+
+/* TEXTO MOVIMIENTO */
+
+.marquee-top,
+.marquee-bottom{
+position:fixed;
+width:100%;
+background:black;
+color:red;
+padding:8px;
+overflow:hidden;
+white-space:nowrap;
+z-index:1000;
+font-weight:bold;
+}
+
+.marquee-top{
+top:0;
+}
+
+.marquee-bottom{
+bottom:0;
+}
+
+.marquee-text{
+display:inline-block;
+padding-left:100%;
+animation:mover 18s linear infinite;
+
+text-shadow:
+0 0 5px red,
+0 0 15px red,
+0 0 25px red;
+}
+
+@keyframes mover{
+
+0%{
+transform:translateX(0);
+}
+
+100%{
+transform:translateX(-100%);
+}
+
+}
+
+/* HEADER */
+
+header{
+padding:90px 20px 40px;
+text-align:center;
+}
+
+header h1{
+font-size:42px;
+color:#00e5ff;
+
+text-shadow:
+0 0 5px #00e5ff,
+0 0 15px #00e5ff,
+0 0 30px #00e5ff;
+}
+
+header p{
+margin-top:15px;
+font-size:22px;
+}
+
+/* TARJETAS */
+
+.contenedor{
+width:90%;
+margin:auto;
+
+display:grid;
+grid-template-columns:
+repeat(auto-fit,minmax(250px,1fr));
+
+gap:25px;
+}
+
+.tarjeta{
+background:rgba(255,255,255,0.08);
+padding:25px;
+border-radius:25px;
+transition:0.4s;
+
+box-shadow:
+0 0 10px rgba(0,229,255,0.2);
+}
+
+.tarjeta:hover{
+transform:translateY(-8px);
+
+box-shadow:
+0 0 20px #00e5ff,
+0 0 40px #00e5ff;
+}
+
+.tarjeta h2{
+font-size:30px;
+margin-bottom:15px;
+color:#00e5ff;
+}
+
+.tarjeta p{
+font-size:18px;
+margin-bottom:20px;
+}
+
+/* FOOTER */
+
+footer{
+text-align:center;
+padding:40px;
+font-size:65px;
+font-weight:bold;
+color:red;
+
+text-shadow:
+0 0 5px red,
+0 0 20px red,
+0 0 40px red;
+
+margin-bottom:80px;
+}
+
+/* PANEL JUEGO */
+
+#juego{
+
+position:fixed;
+
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+background:rgba(0,0,0,0.95);
+
+display:none;
+
+justify-content:center;
+align-items:center;
+flex-direction:column;
+
+z-index:99999;
+
+padding:20px;
+
+text-align:center;
+
+}
+
+#juego h2{
+font-size:40px;
+margin-bottom:20px;
+color:#00e5ff;
+}
+
+#juego p{
+font-size:24px;
+margin-bottom:20px;
+max-width:700px;
+}
+
+.respuesta{
+padding:15px;
+width:300px;
+border:none;
+border-radius:15px;
+font-size:22px;
+text-align:center;
+}
+
+/* CUADROS */
+
+.cuadro-magico{
+
+display:grid;
+
+grid-template-columns:
+repeat(3,80px);
+
+gap:10px;
+
+margin:20px 0;
+
+}
+
+.cuadro-magico input{
+
+width:80px;
+height:80px;
+
+font-size:30px;
+text-align:center;
+
+border:none;
+border-radius:10px;
+
+}
+
+/* CONFETI */
+
+.confeti{
+
+position:fixed;
+
+width:12px;
+height:12px;
+
+top:-20px;
+
+z-index:100000;
+
+animation:caer linear forwards;
+
+}
+
+@keyframes caer{
+
+0%{
+transform:translateY(0) rotate(0deg);
+}
+
+100%{
+transform:translateY(110vh) rotate(720deg);
+}
+
+}
+
+@media(max-width:700px){
+
+header h1{
+font-size:32px;
+}
+
+footer{
+font-size:45px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- POPUP -->
+
+<div id="popup">
+
+<div class="popup-box">
+
+<h1>✨ Bienvenido ✨</h1>
+
+<p>
+Esta página está hecha para aprender cosas nuevas 📚
+</p>
+
+<button onclick="cerrarPopup()">
+Entrar
+</button>
+
+</div>
+
+</div>
+
+<!-- TEXTO ARRIBA -->
+
+<div class="marquee-top">
+<div class="marquee-text">
+⚠ DERECHOS DE AUTOR PARA NICOLAS HERNANDEZ GOMEZ ⚠ DERECHOS DE AUTOR PARA NICOLAS HERNANDEZ GOMEZ ⚠
+</div>
+</div>
+
+<!-- HEADER -->
+
+<header>
+
+<h1>
+INSTITUCIÓN EDUCATIVA <br>
+PRESBÍTERO ANTONIO BERNAL
+</h1>
+
+<p>
+Aprende • Practica • Domina
+</p>
+
+</header>
+
+<!-- TARJETAS -->
+
+<div class="contenedor">
+
+<div class="tarjeta">
+<h2>📐 Perímetros y Áreas</h2>
+<p>Calcula áreas y perímetros.</p>
+<button onclick="mostrarProblema('Perímetros y áreas')">
+Entrar
+</button>
+</div>
+
+<div class="tarjeta">
+<h2>🔢 Cuadrados Mágicos</h2>
+<p>Completa cuadros matemáticos.</p>
+<button onclick="mostrarProblema('Cuadrados mágicos')">
+Entrar
+</button>
+</div>
+
+<div class="tarjeta">
+<h2>🧩 Sudoku</h2>
+<p>Completa sin repetir números.</p>
+<button onclick="mostrarProblema('Sudoku')">
+Entrar
+</button>
+</div>
+
+<div class="tarjeta">
+<h2>📏 Pitágoras</h2>
+<p>Encuentra hipotenusas.</p>
+<button onclick="mostrarProblema('Pitágoras')">
+Entrar
+</button>
+</div>
+
+<div class="tarjeta">
+<h2>➖ Números Enteros</h2>
+<p>Practica positivos y negativos.</p>
+<button onclick="mostrarProblema('Números enteros')">
+Entrar
+</button>
+</div>
+
+<div class="tarjeta">
+<h2>🍕 Fracciones</h2>
+<p>Resuelve operaciones.</p>
+<button onclick="mostrarProblema('Fracciones')">
+Entrar
+</button>
+</div>
+
+</div>
+
+<footer>
+🔥 by Nicc 🔥
+</footer>
+
+<!-- TEXTO ABAJO -->
+
+<div class="marquee-bottom">
+<div class="marquee-text">
+⚠ DERECHOS DE AUTOR PARA NICOLAS HERNANDEZ GOMEZ ⚠ DERECHOS DE AUTOR PARA NICOLAS HERNANDEZ GOMEZ ⚠
+</div>
+</div>
+
+<!-- PANEL -->
+
+<div id="juego"></div>
+
+<script>
+
+/* POPUP */
+
+function cerrarPopup(){
+
+document.getElementById("popup")
+.style.display = "none";
+
+}
+
+/* CONFETI */
+
+function lanzarConfeti(){
+
+for(let i=0;i<120;i++){
+
+let confeti =
+document.createElement("div");
+
+confeti.classList.add("confeti");
+
+confeti.style.left =
+Math.random()*100 + "vw";
+
+confeti.style.animationDuration =
+(Math.random()*3+2)+"s";
+
+confeti.style.background =
+`hsl(${Math.random()*360},100%,50%)`;
+
+document.body.appendChild(confeti);
+
+setTimeout(()=>{
+confeti.remove();
+},5000);
+
+}
+
+}
+
+/* PROBLEMAS */
+
+const problemas = {
+
+"Perímetros y áreas":[
+{
+pregunta:"Un terreno rectangular mide 20m de largo y 15m de ancho. ¿Cuál es su área?",
+respuesta:"300"
+},
+{
+pregunta:"Una cancha cuadrada tiene lados de 12m. ¿Cuál es su perímetro?",
+respuesta:"48"
+},
+{
+pregunta:"Una piscina mide 10m x 6m. ¿Cuál es su área?",
+respuesta:"60"
+}
+],
+
+"Pitágoras":[
+{
+pregunta:"Un triángulo tiene lados 3 y 4. ¿Cuál es la hipotenusa?",
+respuesta:"5"
+},
+{
+pregunta:"Calcula la hipotenusa de lados 8 y 15.",
+respuesta:"17"
+},
+{
+pregunta:"Si la hipotenusa mide 13 y un lado 5, ¿cuál es el otro lado?",
+respuesta:"12"
+}
+],
+
+"Números enteros":[
+{
+pregunta:"¿Cuánto es -5 + 12?",
+respuesta:"7"
+},
+{
+pregunta:"Resuelve: -20 + 8",
+respuesta:"-12"
+},
+{
+pregunta:"¿Cuál es el resultado de 15 - 22?",
+respuesta:"-7"
+}
+],
+
+"Fracciones":[
+{
+pregunta:"¿Cuánto es 1/2 + 1/2?",
+respuesta:"1"
+},
+{
+pregunta:"¿Cuánto es 3/5 + 2/5?",
+respuesta:"1"
+},
+{
+pregunta:"¿Cuánto es 5/6 - 1/6?",
+respuesta:"4/6"
+}
+]
+
+};
+
+/* MOSTRAR */
+
+function mostrarProblema(tipo){
+
+let contenido = "";
+
+/* CUADRADO MAGICO */
+
+if(tipo == "Cuadrados mágicos"){
+
+contenido = `
+
+<h2>🔢 Cuadrado Mágico</h2>
+
+<p>
+Completa el cuadro para que todas las filas sumen 15.
+</p>
+
+<div class="cuadro-magico">
+
+<input type="number" value="8" disabled>
+<input id="r1" type="number">
+<input type="number" value="6" disabled>
+
+<input id="r2" type="number">
+<input type="number" value="5" disabled>
+<input id="r3" type="number">
+
+<input type="number" value="4" disabled>
+<input id="r4" type="number">
+<input type="number" value="2" disabled>
+
+</div>
+
+<button onclick="validarCuadrado()">
+Responder
+</button>
+
+<button onclick="cerrarJuego()">
+Cerrar
+</button>
+
+`;
+
+}
+
+/* SUDOKU */
+
+else if(tipo == "Sudoku"){
+
+contenido = `
+
+<h2>🧩 Sudoku</h2>
+
+<p>
+Completa sin repetir números.
+</p>
+
+<div class="cuadro-magico">
+
+<input type="number" value="1" disabled>
+<input id="s1" type="number">
+<input type="number" value="3" disabled>
+
+<input id="s2" type="number">
+<input type="number" value="5" disabled>
+<input id="s3" type="number">
+
+<input type="number" value="7" disabled>
+<input id="s4" type="number">
+<input type="number" value="9" disabled>
+
+</div>
+
+<button onclick="validarSudoku()">
+Responder
+</button>
+
+<button onclick="cerrarJuego()">
+Cerrar
+</button>
+
+`;
+
+}
+
+/* DEMAS */
+
+else{
+
+let lista = problemas[tipo];
+
+let numero =
+Math.floor(Math.random()*lista.length);
+
+let ejercicio = lista[numero];
+
+contenido = `
+
+<h2>${tipo}</h2>
+
+<p>${ejercicio.pregunta}</p>
+
+<input
+id="respuestaUsuario"
+class="respuesta"
+type="text"
+placeholder="Escribe tu respuesta">
+
+<br><br>
+
+<button onclick="verificar('${ejercicio.respuesta}')">
+Responder
+</button>
+
+<button onclick="cerrarJuego()">
+Cerrar
+</button>
+
+`;
+
+}
+
+document.getElementById("juego")
+.innerHTML = contenido;
+
+document.getElementById("juego")
+.style.display = "flex";
+
+}
+
+/* VALIDAR */
+
+function verificar(correcta){
+
+let usuario =
+document.getElementById("respuestaUsuario")
+.value
+.trim();
+
+if(usuario == correcta){
+
+lanzarConfeti();
+
+alert("🎉 ¡Correcto!");
+
+}
+else{
+
+alert("❌ Incorrecto");
+
+cerrarJuego();
+
+}
+
+}
+
+/* CUADRADO */
+
+function validarCuadrado(){
+
+let r1 =
+document.getElementById("r1").value;
+
+let r2 =
+document.getElementById("r2").value;
+
+let r3 =
+document.getElementById("r3").value;
+
+let r4 =
+document.getElementById("r4").value;
+
+if(
+r1=="1" &&
+r2=="3" &&
+r3=="7" &&
+r4=="9"
+){
+
+lanzarConfeti();
+
+alert("🎉 ¡Ganaste!");
+
+}
+else{
+
+alert("❌ Incorrecto");
+
+cerrarJuego();
+
+}
+
+}
+
+/* SUDOKU */
+
+function validarSudoku(){
+
+let s1 =
+document.getElementById("s1").value;
+
+let s2 =
+document.getElementById("s2").value;
+
+let s3 =
+document.getElementById("s3").value;
+
+let s4 =
+document.getElementById("s4").value;
+
+if(
+s1=="2" &&
+s2=="4" &&
+s3=="6" &&
+s4=="8"
+){
+
+lanzarConfeti();
+
+alert("🎉 Sudoku completado");
+
+}
+else{
+
+alert("❌ Incorrecto");
+
+cerrarJuego();
+
+}
+
+}
+
+/* CERRAR */
+
+function cerrarJuego(){
+
+document.getElementById("juego")
+.style.display = "none";
+
+}
+
+</script>
+
+</body>
+</html>
